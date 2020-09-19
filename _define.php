@@ -25,7 +25,7 @@ $this->registerModule(
 	/* Author */
 	"Jean-Christian Denis, Pierre Van Glabeke",
 	/* Version */
-	'2015-03-11',
+	'2020-09-18',
 	/* Properies */
 	array(
 		'permissions' => 'usage,contentadmin',

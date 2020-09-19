@@ -73,7 +73,8 @@ class dcLatestVersionsAdmin
 
 			if (false === $updater->check('0')) {
 
-				return false;
+				//return false;
+				continue;
 			}
 
 			$li[] = str_replace(

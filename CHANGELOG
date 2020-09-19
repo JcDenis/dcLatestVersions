@@ -1,3 +1,6 @@
+2020-09-18 - Pierre Van Glabeke
+* modif _admin.php (merci à nanart)
+
 2015-03-11 - Pierre Van Glabeke
 * ajout mode hors ligne et codage titre widget (widget)
 * encodage UNIX (LF)
