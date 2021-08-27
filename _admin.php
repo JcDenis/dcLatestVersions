@@ -3,8 +3,7 @@
 #
 # This file is part of dcLatestVersions, a plugin for Dotclear 2.
 # 
-# Copyright (c) 2009-2015 Jean-Christian Denis and contributors
-# contact@jcdenis.fr http://jcd.lv
+# Copyright (c) 2009-2021 Jean-Christian Denis and contributors
 # 
 # Licensed under the GPL version 2.0 license.
 # A copy of this license is available in LICENSE file or at
@@ -13,24 +12,23 @@
 # -- END LICENSE BLOCK ------------------------------------
 
 if (!defined('DC_CONTEXT_ADMIN')) {
-
-	return null;
+    return null;
 }
 
-require dirname(__FILE__).'/_widgets.php';
+require dirname(__FILE__) . '/_widgets.php';
 
 # Dashboard item and user preference
 $core->addBehavior(
-	'adminDashboardItems',
-	array('dcLatestVersionsAdmin', 'adminDashboardItems')
+    'adminDashboardItems',
+    ['dcLatestVersionsAdmin', 'adminDashboardItems']
 );
 $core->addBehavior(
-	'adminDashboardOptionsForm',
-	array('dcLatestVersionsAdmin', 'adminDashboardOptionsForm')
+    'adminDashboardOptionsForm',
+    ['dcLatestVersionsAdmin', 'adminDashboardOptionsForm']
 );
 $core->addBehavior(
-	'adminAfterDashboardOptionsUpdate',
-	array('dcLatestVersionsAdmin', 'adminAfterDashboardOptionsUpdate')
+    'adminAfterDashboardOptionsUpdate',
+    ['dcLatestVersionsAdmin', 'adminAfterDashboardOptionsUpdate']
 );
 
 /**
@@ -40,98 +38,92 @@ $core->addBehavior(
  */
 class dcLatestVersionsAdmin
 {
-	public static function adminDashboardItems(dcCore $core, $__dashboard_items)
-	{
-		if (!$core->auth->user_prefs->dashboard->get('dcLatestVersionsItems')) {
+    public static function adminDashboardItems(dcCore $core, $__dashboard_items)
+    {
+        if (!$core->auth->user_prefs->dashboard->get('dcLatestVersionsItems')) {
+            return null;
+        }
 
-			return null;
-		}
+        $builds = explode(',', (string) $core->blog->settings->dcLatestVersions->builds);
+        if (empty($builds)) {
+            return null;
+        }
 
-		$builds = (string) $core->blog->settings->dcLatestVersions->builds;
-		$builds = explode(',', $builds);
-		if (empty($builds)) {
+        $text = __('<li><a href="%u" title="Download Dotclear %v">%r</a> : %v</li>');
+        $li = [];
 
-			return null;
-		}
+        foreach($builds as $build) {
 
-		$text = __('<li><a href="%u" title="Download Dotclear %v">%r</a> : %v</li>');
-		$li = array();
+            $build = strtolower(trim($build));
+            if (empty($build)) {
+                continue;
+            }
 
-		foreach($builds as $build) {
+            $updater = new dcUpdate(
+                DC_UPDATE_URL,
+                'dotclear',
+                $build,
+                DC_TPL_CACHE . '/versions'
+            );
 
-			$build = strtolower(trim($build));
-			if (empty($build)) {
-				continue;
-			}
+            if (false === $updater->check('0')) {
+                continue;
+            }
 
-			$updater = new dcUpdate(
-				DC_UPDATE_URL,
-				'dotclear',
-				$build,
-				DC_TPL_CACHE.'/versions'
-			);
+            $li[] = str_replace(
+                [
+                    '%r',
+                    '%v',
+                    '%u'
+                ],
+                [
+                    $build,
+                    $updater->getVersion(),
+                    $updater->getFileURL()
+                ],
+                $text
+            );
+        }
 
-			if (false === $updater->check('0')) {
+        if (empty($li)) {
+            return null;
+        }
+        
+        # Display
+        $__dashboard_items[0][] =
+        '<div class="box small" id="udclatestversionsitems">' .
+        '<h3>' . html::escapeHTML(__("Dotclear's latest versions")) . '</h3>' .
+        '<ul>' . implode('', $li) . '</ul>' .
+        '</div>';
+    }
 
-				//return false;
-				continue;
-			}
+    public static function adminDashboardOptionsForm(dcCore $core)
+    {
+        if (!$core->auth->user_prefs->dashboard->prefExists('dcLatestVersionsItems')) {
+            $core->auth->user_prefs->dashboard->put(
+                'dcLatestVersionsItems',
+                false,
+                'boolean'
+            );
+        }
+        $pref = $core->auth->user_prefs->dashboard->get('dcLatestVersionsItems');
 
-			$li[] = str_replace(
-				array(
-					'%r',
-					'%v',
-					'%u'
-				),
-				array(
-					$build,
-					$updater->getVersion(),
-					$updater->getFileURL()
-				),
-				$text
-			);
-		}
+        echo  
+        '<div class="fieldset">' .
+        '<h4>' . __("Dotclear's latest versions") . '</h4>' .
+        '<p><label class="classic" for="dcLatestVersionsItems">' .
+        form::checkbox('dcLatestVersionsItems', 1, $pref) . ' ' .
+        __("Show Dotclear's latest versions on dashboards.") .
+        '</label></p>' .
+        '</div>';
+    }
 
-		if (empty($li)) {
-
-			return null;
-		}
-		
-		# Display
-		$__dashboard_items[0][] =
-		'<div class="box small" id="udclatestversionsitems">'.
-		'<h3>'.html::escapeHTML(__("Dotclear's latest versions")).'</h3>'.
-		'<ul>'.implode('', $li).'</ul>'.
-		'</div>';
-	}
-
-	public static function adminDashboardOptionsForm(dcCore $core)
-	{
-		if (!$core->auth->user_prefs->dashboard->prefExists('dcLatestVersionsItems')) {
-			$core->auth->user_prefs->dashboard->put(
-				'dcLatestVersionsItems',
-				false,
-				'boolean'
-			);
-		}
-		$pref = $core->auth->user_prefs->dashboard->get('dcLatestVersionsItems');
-
-		echo  
-		'<div class="fieldset">'.
-		'<h4>'.__("Dotclear's latest versions").'</h4>'.
-		'<p><label class="classic" for="dcLatestVersionsItems">'.
-		form::checkbox('dcLatestVersionsItems', 1, $pref).' '.
-		__("Show Dotclear's latest versions on dashboards.").
-		'</label></p>'.
-		'</div>';
-	}
-
-	public static function adminAfterDashboardOptionsUpdate($user_id)
-	{
-		$GLOBALS['core']->auth->user_prefs->dashboard->put(
-			'dcLatestVersionsItems',
-			!empty($_POST['dcLatestVersionsItems']),
-			'boolean'
-		);
-	}
+    public static function adminAfterDashboardOptionsUpdate($user_id)
+    {
+        $GLOBALS['core']->auth->user_prefs->dashboard->put(
+            'dcLatestVersionsItems',
+            !empty($_POST['dcLatestVersionsItems']),
+            'boolean'
+        );
+    }
 }

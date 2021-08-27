@@ -3,8 +3,7 @@
 #
 # This file is part of dcLatestVersions, a plugin for Dotclear 2.
 # 
-# Copyright (c) 2009-2015 Jean-Christian Denis and contributors
-# contact@jcdenis.fr http://jcd.lv
+# Copyright (c) 2009-2021 Jean-Christian Denis and contributors
 # 
 # Licensed under the GPL version 2.0 license.
 # A copy of this license is available in LICENSE file or at
@@ -13,37 +12,28 @@
 # -- END LICENSE BLOCK ------------------------------------
 
 if (!defined('DC_CONTEXT_ADMIN')) {
-
 	return null;
 }
 
 # -- Module specs --
-
-$dc_min = '2.6';
+$dc_min = '2.19';
 $mod_id = 'dcLatestVersions';
-$mod_conf = array(
-	array(
-		'builds',
-		"List of Dotclear's builds",
-		'stable,unstable,testing,sexy',
-		'string'
-	)
-);
+$mod_conf = [[
+	'builds',
+	"List of Dotclear's builds",
+	'stable,unstable,testing,sexy',
+	'string'
+]];
 
 # -- Nothing to change below --
-
 try {
-
 	# Check module version
 	if (version_compare(
 		$core->getVersion($mod_id),
 		$core->plugins->moduleInfo($mod_id, 'version'),
-		'>='
-	)) {
-
+		'>=')) {
 		return null;
 	}
-
 	# Check Dotclear version
 	if (!method_exists('dcUtils', 'versionsCompare') 
 	 || dcUtils::versionsCompare(DC_VERSION, $dc_min, '<', false)) {
@@ -51,7 +41,6 @@ try {
 			'%s requires Dotclear %s', $mod_id, $dc_min
 		));
 	}
-
 	# Set module settings
 	$core->blog->settings->addNamespace($mod_id);
 	foreach($mod_conf as $v) {
@@ -59,17 +48,14 @@ try {
 			$v[0], $v[2], $v[3], $v[1], false, true
 		);
 	}
-
 	# Set module version
 	$core->setVersion(
 		$mod_id,
 		$core->plugins->moduleInfo($mod_id, 'version')
 	);
-
 	return true;
 }
 catch (Exception $e) {
 	$core->error->add($e->getMessage());
-
 	return false;
 }

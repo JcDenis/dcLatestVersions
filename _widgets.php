@@ -3,8 +3,7 @@
 #
 # This file is part of dcLatestVersions, a plugin for Dotclear 2.
 # 
-# Copyright (c) 2009-2015 Jean-Christian Denis and contributors
-# contact@jcdenis.fr http://jcd.lv
+# Copyright (c) 2009-2021 Jean-Christian Denis and contributors
 # 
 # Licensed under the GPL version 2.0 license.
 # A copy of this license is available in LICENSE file or at
@@ -13,15 +12,14 @@
 # -- END LICENSE BLOCK ------------------------------------
 
 if (!defined('DC_RC_PATH')) {
-
-	return null;
+    return null;
 }
 
 $core->blog->settings->addNamespace('dcLatestVersions');
 
 $core->addBehavior(
-	'initWidgets',
-	array('dcLatestVersionsWidget', 'adminWidget')
+    'initWidgets',
+    ['dcLatestVersionsWidget', 'adminWidget']
 );
 
 /**
@@ -31,121 +29,98 @@ $core->addBehavior(
  */
 class dcLatestVersionsWidget
 {
-	public static function adminWidget($w)
-	{
-		$w->create(
-			'dclatestversionswidget',
-			__("Dotclear's latest versions"),
-			array('dcLatestVersionsWidget','publicWidget'),
-			null,
-			__("Show the latest available versions of Dotclear")
-		);
-		$w->dclatestversionswidget->setting(
-			'title',
-			__('Title:'),
-			__("Dotclear's latest versions"),
-			'text'
-		);
-		$w->dclatestversionswidget->setting(
-			'text',
-			__('Text (%r = release, %v = version, %u = url):'),
-			__('<strong>%r: </strong> <a href="%u" title="Download Dotclear %v">%v</a>'),
-			'text'
-		);
-		$w->dclatestversionswidget->setting(
-			'homeonly',
-			__('Display on:'),
-			0,
-			'combo',
-			array(
-				__('All pages') => 0, 
-				__('Home page only') => 1, 
-				__('Except on home page') => 2
-			)
-		);
-		$w->dclatestversionswidget->setting(
-			'content_only',
-			__('Content only'),
-			0,
-			'check'
-		);
-		$w->dclatestversionswidget->setting(
-			'class',
-			__('CSS class:'),
-			''
-		);
-		$w->dclatestversionswidget->setting('offline',__('Offline'),0,'check');
-	}
+    public static function adminWidget($w)
+    {
+        $w
+            ->create(
+                'dclatestversionswidget',
+                __("Dotclear's latest versions"),
+                ['dcLatestVersionsWidget','publicWidget'],
+                null,
+                __("Show the latest available versions of Dotclear")
+            )
+            ->addTitle(
+                __("Dotclear's latest versions")
+            )
+            ->setting(
+                'text',
+                __('Text (%r = release, %v = version, %u = url):'),
+                __('<strong>%r: </strong> <a href="%u" title="Download Dotclear %v">%v</a>'),
+                'text'
+            )
+            ->addHomeOnly()
+            ->addContentOnly()
+            ->addClass()
+            ->addOffline();
+    }
 
-	public static function publicWidget($w)
-	{
-		global $core;
+    public static function publicWidget($w)
+    {
+        global $core;
 
-		$core->blog->settings->addNamespace('dcLatestVersions');
+        $core->blog->settings->addNamespace('dcLatestVersions');
 
-		if ($w->offline)
-			return;
+        if ($w->offline) {
+            return null;
+        }
 
-		# Nothing to display
-		if ($w->homeonly == 1 && $core->url->type != 'default' 
-		 || $w->homeonly == 2 && $core->url->type == 'default' 
-		 || $w->text == ''
-		) {
-			return null;
-		}
+        if (($w->homeonly == 1 && !$core->url->isHome($core->url->type)) 
+         || ($w->homeonly == 2 && $core->url->isHome($core->url->type))
+         || $w->text == '') {
+            return null;
+        }
 
-		# Builds to check
-		$builds = (string) $core->blog->settings->dcLatestVersions->builds;
-		$builds = explode(',', $builds);
-		if (empty($builds)) {
+        # Builds to check
+        $builds = (string) $core->blog->settings->dcLatestVersions->builds;
+        $builds = explode(',', $builds);
+        if (empty($builds)) {
+            return null;
+        }
 
-			return null;
-		}
+        $li = [];
+        foreach($builds as $build) {
 
-		$li = array();
-		foreach($builds as $build) {
+            $build = strtolower(trim($build));
+            if (empty($build)) {
+                continue;
+            }
 
-			$build = strtolower(trim($build));
-			if (empty($build)) {
-				continue;
-			}
+            $updater = new dcUpdate(
+                DC_UPDATE_URL,
+                'dotclear',
+                $build,
+                DC_TPL_CACHE . '/versions'
+            );
 
-			$updater = new dcUpdate(
-				DC_UPDATE_URL,
-				'dotclear',
-				$build,
-				DC_TPL_CACHE.'/versions'
-			);
+            if (false === $updater->check('0')) {
+                continue;
+            }
 
-			if (false === $updater->check('0')) {
-				continue;
-			}
+            $li[] = sprintf('<li>%s</li>', str_replace(
+                [
+                    '%r',
+                    '%v',
+                    '%u'
+                ],
+                [
+                    $build,
+                    $updater->getVersion(),
+                    $updater->getFileURL()
+                ],
+                $w->text
+            ));
+        }
 
-			$li[] = '<li>'.str_replace(
-				array(
-					'%r',
-					'%v',
-					'%u'
-				),
-				array(
-					$build,
-					$updater->getVersion(),
-					$updater->getFileURL()
-				),
-				$w->text
-			).'</li>';
-		}
+        if (empty($li)) {
+            return null;
+        }
 
-		if (empty($li)) {
-
-			return null;
-		}
-
-		# Display
-		$res =
-		($w->title ? $w->renderTitle(html::escapeHTML($w->title)) : '').
-		'<ul>'.implode('',$li).'</ul>';
-
-		return $w->renderDiv($w->content_only,'dclatestversionswidget '.$w->class,'',$res);
-	}
+        # Display
+        return $w->renderDiv(
+            $w->content_only, 
+            'dclatestversionswidget '. $w->class, 
+            '', 
+            ($w->title ? $w->renderTitle(html::escapeHTML($w->title)) : '') . sprintf('<ul>%s</ul>', implode('',$li))
+        );
+    }
 }

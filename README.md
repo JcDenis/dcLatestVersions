@@ -21,3 +21,14 @@ Dotaddict repository. (See Dotclear's documentation to know how do this)
 
 Add and configure "Dotclear's latest versions" from widgets manager.
 You can add a dashboard item by enable it from your dashboard preferences.
+
+## MORE
+
+ * License : GNU GPL v2
+ * Source & contribution : [GitHub Page](https://github.com/JcDenis/dcLatestVersions)
+ * Packages & details:  [Dotaddict Page](https://plugins.dotaddict.org/dc2/details/dcLatestVersions)
+
+## CONTRIBUTORS
+
+ * Jean-Chirstian Denis
+ * Pierre Van Glabeke
