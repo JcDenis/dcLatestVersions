@@ -1,10 +1,11 @@
 <?php
+
 # -- BEGIN LICENSE BLOCK ----------------------------------
 #
 # This file is part of dcLatestVersions, a plugin for Dotclear 2.
-# 
+#
 # Copyright (c) 2009-2021 Jean-Christian Denis and contributors
-# 
+#
 # Licensed under the GPL version 2.0 license.
 # A copy of this license is available in LICENSE file or at
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -15,9 +16,9 @@ if (!defined('DC_RC_PATH')) {
     return null;
 }
 
-$core->blog->settings->addNamespace('dcLatestVersions');
+dcCore::app()->blog->settings->addNamespace('dcLatestVersions');
 
-$core->addBehavior(
+dcCore::app()->addBehavior(
     'initWidgets',
     ['dcLatestVersionsWidget', 'adminWidget']
 );
@@ -37,7 +38,7 @@ class dcLatestVersionsWidget
                 __("Dotclear's latest versions"),
                 ['dcLatestVersionsWidget','publicWidget'],
                 null,
-                __("Show the latest available versions of Dotclear")
+                __('Show the latest available versions of Dotclear')
             )
             ->addTitle(
                 __("Dotclear's latest versions")
@@ -56,30 +57,27 @@ class dcLatestVersionsWidget
 
     public static function publicWidget($w)
     {
-        global $core;
-
-        $core->blog->settings->addNamespace('dcLatestVersions');
+        dcCore::app()->blog->settings->addNamespace('dcLatestVersions');
 
         if ($w->offline) {
             return null;
         }
 
-        if (($w->homeonly == 1 && !$core->url->isHome($core->url->type)) 
-         || ($w->homeonly == 2 && $core->url->isHome($core->url->type))
+        if (($w->homeonly == 1 && !dcCore::app()->url->isHome(dcCore::app()->url->type))
+         || ($w->homeonly == 2 && dcCore::app()->url->isHome(dcCore::app()->url->type))
          || $w->text == '') {
             return null;
         }
 
         # Builds to check
-        $builds = (string) $core->blog->settings->dcLatestVersions->builds;
+        $builds = (string) dcCore::app()->blog->settings->dcLatestVersions->builds;
         $builds = explode(',', $builds);
         if (empty($builds)) {
             return null;
         }
 
         $li = [];
-        foreach($builds as $build) {
-
+        foreach ($builds as $build) {
             $build = strtolower(trim($build));
             if (empty($build)) {
                 continue;
@@ -100,12 +98,12 @@ class dcLatestVersionsWidget
                 [
                     '%r',
                     '%v',
-                    '%u'
+                    '%u',
                 ],
                 [
                     $build,
                     $updater->getVersion(),
-                    $updater->getFileURL()
+                    $updater->getFileURL(),
                 ],
                 $w->text
             ));
@@ -117,10 +115,10 @@ class dcLatestVersionsWidget
 
         # Display
         return $w->renderDiv(
-            $w->content_only, 
-            'dclatestversionswidget '. $w->class, 
-            '', 
-            ($w->title ? $w->renderTitle(html::escapeHTML($w->title)) : '') . sprintf('<ul>%s</ul>', implode('',$li))
+            $w->content_only,
+            'dclatestversionswidget ' . $w->class,
+            '',
+            ($w->title ? $w->renderTitle(html::escapeHTML($w->title)) : '') . sprintf('<ul>%s</ul>', implode('', $li))
         );
     }
 }

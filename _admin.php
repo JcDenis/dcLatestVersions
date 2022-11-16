@@ -1,10 +1,11 @@
 <?php
+
 # -- BEGIN LICENSE BLOCK ----------------------------------
 #
 # This file is part of dcLatestVersions, a plugin for Dotclear 2.
-# 
+#
 # Copyright (c) 2009-2021 Jean-Christian Denis and contributors
-# 
+#
 # Licensed under the GPL version 2.0 license.
 # A copy of this license is available in LICENSE file or at
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -15,18 +16,18 @@ if (!defined('DC_CONTEXT_ADMIN')) {
     return null;
 }
 
-require dirname(__FILE__) . '/_widgets.php';
+require __DIR__ . '/_widgets.php';
 
 # Dashboard item and user preference
-$core->addBehavior(
-    'adminDashboardItems',
+dcCore::app()->addBehavior(
+    'adminDashboardItemsV2',
     ['dcLatestVersionsAdmin', 'adminDashboardItems']
 );
-$core->addBehavior(
-    'adminDashboardOptionsForm',
+dcCore::app()->addBehavior(
+    'adminDashboardOptionsFormV2',
     ['dcLatestVersionsAdmin', 'adminDashboardOptionsForm']
 );
-$core->addBehavior(
+dcCore::app()->addBehavior(
     'adminAfterDashboardOptionsUpdate',
     ['dcLatestVersionsAdmin', 'adminAfterDashboardOptionsUpdate']
 );
@@ -38,22 +39,21 @@ $core->addBehavior(
  */
 class dcLatestVersionsAdmin
 {
-    public static function adminDashboardItems(dcCore $core, $__dashboard_items)
+    public static function adminDashboardItems($__dashboard_items)
     {
-        if (!$core->auth->user_prefs->dashboard->get('dcLatestVersionsItems')) {
+        if (!dcCore::app()->auth->user_prefs->dashboard->get('dcLatestVersionsItems')) {
             return null;
         }
 
-        $builds = explode(',', (string) $core->blog->settings->dcLatestVersions->builds);
+        $builds = explode(',', (string) dcCore::app()->blog->settings->dcLatestVersions->builds);
         if (empty($builds)) {
             return null;
         }
 
         $text = __('<li><a href="%u" title="Download Dotclear %v">%r</a> : %v</li>');
-        $li = [];
+        $li   = [];
 
-        foreach($builds as $build) {
-
+        foreach ($builds as $build) {
             $build = strtolower(trim($build));
             if (empty($build)) {
                 continue;
@@ -74,12 +74,12 @@ class dcLatestVersionsAdmin
                 [
                     '%r',
                     '%v',
-                    '%u'
+                    '%u',
                 ],
                 [
                     $build,
                     $updater->getVersion(),
-                    $updater->getFileURL()
+                    $updater->getFileURL(),
                 ],
                 $text
             );
@@ -88,27 +88,26 @@ class dcLatestVersionsAdmin
         if (empty($li)) {
             return null;
         }
-        
+
         # Display
-        $__dashboard_items[0][] =
-        '<div class="box small" id="udclatestversionsitems">' .
+        $__dashboard_items[0][] = '<div class="box small" id="udclatestversionsitems">' .
         '<h3>' . html::escapeHTML(__("Dotclear's latest versions")) . '</h3>' .
         '<ul>' . implode('', $li) . '</ul>' .
         '</div>';
     }
 
-    public static function adminDashboardOptionsForm(dcCore $core)
+    public static function adminDashboardOptionsForm()
     {
-        if (!$core->auth->user_prefs->dashboard->prefExists('dcLatestVersionsItems')) {
-            $core->auth->user_prefs->dashboard->put(
+        if (!dcCore::app()->auth->user_prefs->dashboard->prefExists('dcLatestVersionsItems')) {
+            dcCore::app()->auth->user_prefs->dashboard->put(
                 'dcLatestVersionsItems',
                 false,
                 'boolean'
             );
         }
-        $pref = $core->auth->user_prefs->dashboard->get('dcLatestVersionsItems');
+        $pref = dcCore::app()->auth->user_prefs->dashboard->get('dcLatestVersionsItems');
 
-        echo  
+        echo
         '<div class="fieldset">' .
         '<h4>' . __("Dotclear's latest versions") . '</h4>' .
         '<p><label class="classic" for="dcLatestVersionsItems">' .
@@ -120,7 +119,7 @@ class dcLatestVersionsAdmin
 
     public static function adminAfterDashboardOptionsUpdate($user_id)
     {
-        $GLOBALS['core']->auth->user_prefs->dashboard->put(
+        dcCore::app()->auth->user_prefs->dashboard->put(
             'dcLatestVersionsItems',
             !empty($_POST['dcLatestVersionsItems']),
             'boolean'
