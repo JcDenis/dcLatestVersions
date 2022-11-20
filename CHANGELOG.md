@@ -1,3 +1,6 @@
+2022.11.20
+- fix compatibility with Dotclear 2.24 (required)
+
 2021.08.27
 - cleanup (PSR2,short array, ...)
 - enhance widget style
