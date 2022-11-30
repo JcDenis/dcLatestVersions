@@ -16,111 +16,86 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 
 require __DIR__ . '/_widgets.php';
 
-# Dashboard item and user preference
-dcCore::app()->addBehavior(
-    'adminDashboardItemsV2',
-    ['dcLatestVersionsAdmin', 'adminDashboardItems']
-);
-dcCore::app()->addBehavior(
-    'adminDashboardOptionsFormV2',
-    ['dcLatestVersionsAdmin', 'adminDashboardOptionsForm']
-);
-dcCore::app()->addBehavior(
-    'adminAfterDashboardOptionsUpdate',
-    ['dcLatestVersionsAdmin', 'adminAfterDashboardOptionsUpdate']
-);
+dcCore::app()->addBehavior('adminDashboardItemsV2', function($__dashboard_items) {
+    if (!dcCore::app()->auth->user_prefs->dashboard->get('dcLatestVersionsItems')) {
+        return null;
+    }
 
-/**
- * @ingroup DC_PLUGIN_DCLATESTVERSIONS
- * @brief Display latest versions of Dotclear - admin methods.
- * @since 2.6
- */
-class dcLatestVersionsAdmin
-{
-    public static function adminDashboardItems($__dashboard_items)
-    {
-        if (!dcCore::app()->auth->user_prefs->dashboard->get('dcLatestVersionsItems')) {
-            return null;
+    $builds = explode(',', (string) dcCore::app()->blog->settings->dcLatestVersions->builds);
+    if (empty($builds)) {
+        return null;
+    }
+
+    $text = __('<li><a href="%u" title="Download Dotclear %v">%r</a> : %v</li>');
+    $li   = [];
+
+    foreach ($builds as $build) {
+        $build = strtolower(trim($build));
+        if (empty($build)) {
+            continue;
         }
 
-        $builds = explode(',', (string) dcCore::app()->blog->settings->dcLatestVersions->builds);
-        if (empty($builds)) {
-            return null;
+        $updater = new dcUpdate(
+            DC_UPDATE_URL,
+            'dotclear',
+            $build,
+            DC_TPL_CACHE . '/versions'
+        );
+
+        if (false === $updater->check('0')) {
+            continue;
         }
 
-        $text = __('<li><a href="%u" title="Download Dotclear %v">%r</a> : %v</li>');
-        $li   = [];
-
-        foreach ($builds as $build) {
-            $build = strtolower(trim($build));
-            if (empty($build)) {
-                continue;
-            }
-
-            $updater = new dcUpdate(
-                DC_UPDATE_URL,
-                'dotclear',
+        $li[] = str_replace(
+            [
+                '%r',
+                '%v',
+                '%u',
+            ],
+            [
                 $build,
-                DC_TPL_CACHE . '/versions'
-            );
-
-            if (false === $updater->check('0')) {
-                continue;
-            }
-
-            $li[] = str_replace(
-                [
-                    '%r',
-                    '%v',
-                    '%u',
-                ],
-                [
-                    $build,
-                    $updater->getVersion(),
-                    $updater->getFileURL(),
-                ],
-                $text
-            );
-        }
-
-        if (empty($li)) {
-            return null;
-        }
-
-        # Display
-        $__dashboard_items[0][] = '<div class="box small" id="udclatestversionsitems">' .
-        '<h3>' . html::escapeHTML(__("Dotclear's latest versions")) . '</h3>' .
-        '<ul>' . implode('', $li) . '</ul>' .
-        '</div>';
+                $updater->getVersion(),
+                $updater->getFileURL(),
+            ],
+            $text
+        );
     }
 
-    public static function adminDashboardOptionsForm()
-    {
-        if (!dcCore::app()->auth->user_prefs->dashboard->prefExists('dcLatestVersionsItems')) {
-            dcCore::app()->auth->user_prefs->dashboard->put(
-                'dcLatestVersionsItems',
-                false,
-                'boolean'
-            );
-        }
-        $pref = dcCore::app()->auth->user_prefs->dashboard->get('dcLatestVersionsItems');
-
-        echo
-        '<div class="fieldset">' .
-        '<h4>' . __("Dotclear's latest versions") . '</h4>' .
-        '<p><label class="classic" for="dcLatestVersionsItems">' .
-        form::checkbox('dcLatestVersionsItems', 1, $pref) . ' ' .
-        __("Show Dotclear's latest versions on dashboards.") .
-        '</label></p>' .
-        '</div>';
+    if (empty($li)) {
+        return null;
     }
 
-    public static function adminAfterDashboardOptionsUpdate($user_id)
-    {
+    # Display
+    $__dashboard_items[0][] = '<div class="box small" id="udclatestversionsitems">' .
+    '<h3>' . html::escapeHTML(__("Dotclear's latest versions")) . '</h3>' .
+    '<ul>' . implode('', $li) . '</ul>' .
+    '</div>';
+});
+
+dcCore::app()->addBehavior('adminDashboardOptionsFormV2', function() {
+    if (!dcCore::app()->auth->user_prefs->dashboard->prefExists('dcLatestVersionsItems')) {
         dcCore::app()->auth->user_prefs->dashboard->put(
             'dcLatestVersionsItems',
-            !empty($_POST['dcLatestVersionsItems']),
+            false,
             'boolean'
         );
     }
-}
+    $pref = dcCore::app()->auth->user_prefs->dashboard->get('dcLatestVersionsItems');
+
+    echo
+    '<div class="fieldset">' .
+    '<h4>' . __("Dotclear's latest versions") . '</h4>' .
+    '<p><label class="classic" for="dcLatestVersionsItems">' .
+    form::checkbox('dcLatestVersionsItems', 1, $pref) . ' ' .
+    __("Show Dotclear's latest versions on dashboards.") .
+    '</label></p>' .
+    '</div>';
+});
+
+dcCore::app()->addBehavior('adminAfterDashboardOptionsUpdate', function($user_id) {
+    dcCore::app()->auth->user_prefs->dashboard->put(
+        'dcLatestVersionsItems',
+        !empty($_POST['dcLatestVersionsItems']),
+        'boolean'
+    );
+});
