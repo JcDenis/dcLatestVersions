@@ -55,11 +55,6 @@ try {
             true
         );
     }
-    # Set module version
-    dcCore::app()->setVersion(
-        $mod_id,
-        dcCore::app()->plugins->moduleInfo($mod_id, 'version')
-    );
 
     return true;
 } catch (Exception $e) {
