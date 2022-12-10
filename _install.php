@@ -15,8 +15,6 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 }
 
 # -- Module specs --
-$dc_min   = '2.24';
-$mod_id   = 'dcLatestVersions';
 $mod_conf = [[
     'builds',
     "List of Dotclear's builds",
@@ -27,26 +25,16 @@ $mod_conf = [[
 # -- Nothing to change below --
 try {
     # Check module version
-    if (version_compare(
-        dcCore::app()->getVersion($mod_id),
-        dcCore::app()->plugins->moduleInfo($mod_id, 'version'),
-        '>='
+    if (!dcCore::app()->newVersion(
+        basename(__DIR__), 
+        dcCore::app()->plugins->moduleInfo(basename(__DIR__), 'version')
     )) {
         return null;
     }
-    # Check Dotclear version
-    if (!method_exists('dcUtils', 'versionsCompare')
-     || dcUtils::versionsCompare(DC_VERSION, $dc_min, '<', false)) {
-        throw new Exception(sprintf(
-            '%s requires Dotclear %s',
-            $mod_id,
-            $dc_min
-        ));
-    }
     # Set module settings
-    dcCore::app()->blog->settings->addNamespace($mod_id);
+    dcCore::app()->blog->settings->addNamespace(basename(__DIR__));
     foreach ($mod_conf as $v) {
-        dcCore::app()->blog->settings->{$mod_id}->put(
+        dcCore::app()->blog->settings->__get(basename(__DIR__))->put(
             $v[0],
             $v[2],
             $v[3],
