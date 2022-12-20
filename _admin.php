@@ -7,7 +7,7 @@
  *
  * @author Jean-Christian Denis, Pierre Van Glabeke
  *
- * @copyright Jean-Crhistian Denis
+ * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 if (!defined('DC_CONTEXT_ADMIN')) {
@@ -16,18 +16,17 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 
 require __DIR__ . '/_widgets.php';
 
-dcCore::app()->addBehavior('adminDashboardItemsV2', function($__dashboard_items) {
+dcCore::app()->addBehavior('adminDashboardItemsV2', function ($__dashboard_items) {
     if (!dcCore::app()->auth->user_prefs->dashboard->get('dcLatestVersionsItems')) {
         return null;
     }
 
-    $builds = explode(',', (string) dcCore::app()->blog->settings->dcLatestVersions->builds);
-    if (empty($builds)) {
+    $builds = explode(',', (string) dcCore::app()->blog->settings->get(basename(__DIR__))->get('builds'));
+    if (empty($builds[0])) {
         return null;
     }
 
-    $text = __('<li><a href="%u" title="Download Dotclear %v">%r</a> : %v</li>');
-    $li   = [];
+    $li = [];
 
     foreach ($builds as $build) {
         $build = strtolower(trim($build));
@@ -46,18 +45,12 @@ dcCore::app()->addBehavior('adminDashboardItemsV2', function($__dashboard_items)
             continue;
         }
 
-        $li[] = str_replace(
-            [
-                '%r',
-                '%v',
-                '%u',
-            ],
-            [
-                $build,
-                $updater->getVersion(),
-                $updater->getFileURL(),
-            ],
-            $text
+        $li[] = sprintf(
+            '<li><a href="%1$s" title="%2$s">%3$s</a> : %4$s</li>',
+            $updater->getFileURL(),
+            sprintf(__('Download Dotclear %s'), $updater->getVersion()),
+            $build,
+            $updater->getVersion()
         );
     }
 
@@ -72,7 +65,7 @@ dcCore::app()->addBehavior('adminDashboardItemsV2', function($__dashboard_items)
     '</div>';
 });
 
-dcCore::app()->addBehavior('adminDashboardOptionsFormV2', function() {
+dcCore::app()->addBehavior('adminDashboardOptionsFormV2', function () {
     if (!dcCore::app()->auth->user_prefs->dashboard->prefExists('dcLatestVersionsItems')) {
         dcCore::app()->auth->user_prefs->dashboard->put(
             'dcLatestVersionsItems',
@@ -92,7 +85,7 @@ dcCore::app()->addBehavior('adminDashboardOptionsFormV2', function() {
     '</div>';
 });
 
-dcCore::app()->addBehavior('adminAfterDashboardOptionsUpdate', function($user_id) {
+dcCore::app()->addBehavior('adminAfterDashboardOptionsUpdate', function ($user_id) {
     dcCore::app()->auth->user_prefs->dashboard->put(
         'dcLatestVersionsItems',
         !empty($_POST['dcLatestVersionsItems']),

@@ -7,14 +7,14 @@
  *
  * @author Jean-Christian Denis, Pierre Van Glabeke
  *
- * @copyright Jean-Crhistian Denis
+ * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 if (!defined('DC_RC_PATH')) {
     return null;
 }
 
-dcCore::app()->blog->settings->addNamespace('dcLatestVersions');
+dcCore::app()->blog->settings->addNamespace(basename(__DIR__));
 
 dcCore::app()->addBehavior(
     'initWidgets',
@@ -55,8 +55,6 @@ class dcLatestVersionsWidget
 
     public static function publicWidget($w)
     {
-        dcCore::app()->blog->settings->addNamespace('dcLatestVersions');
-
         if ($w->offline) {
             return null;
         }
@@ -66,9 +64,8 @@ class dcLatestVersionsWidget
         }
 
         # Builds to check
-        $builds = (string) dcCore::app()->blog->settings->dcLatestVersions->builds;
-        $builds = explode(',', $builds);
-        if (empty($builds)) {
+        $builds = explode(',', (string) dcCore::app()->blog->settings->get(basename(__DIR__))->get('builds'));
+        if (empty($builds[0])) {
             return null;
         }
 
