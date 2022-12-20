@@ -1,3 +1,9 @@
+2022.12.20
+- change plugin name
+- use anonymous functions
+- use abstract plugin name
+- fix install
+
 2022.11.20
 - fix compatibility with Dotclear 2.24 (required)
 
