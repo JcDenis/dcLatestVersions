@@ -10,36 +10,30 @@
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-if (!defined('DC_RC_PATH')) {
-    return null;
-}
+declare(strict_types=1);
 
-dcCore::app()->blog->settings->addNamespace(basename(__DIR__));
+namespace Dotclear\Plugin\dcLatestVersions;
 
-dcCore::app()->addBehavior(
-    'initWidgets',
-    ['dcLatestVersionsWidget', 'adminWidget']
-);
+use dcCore;
+use dcUpdate;
+use Dotclear\Helper\Html\Html;
+use Dotclear\Plugin\widgets\WidgetsStack;
+use Dotclear\Plugin\widgets\WidgetsElement;
 
-/**
- * @ingroup DC_PLUGIN_DCLATESTVERSIONS
- * @brief Display latest versions of Dotclear - widget methods.
- * @since 2.6
- */
-class dcLatestVersionsWidget
+class Widgets
 {
-    public static function adminWidget($w)
+    public static function initWidgets(WidgetsStack $w): void
     {
         $w
             ->create(
                 'dclatestversionswidget',
-                __("Dotclear's latest versions"),
-                ['dcLatestVersionsWidget','publicWidget'],
+                My::name(),
+                [self::class, 'parseWidget'],
                 null,
                 __('Show the latest available versions of Dotclear')
             )
             ->addTitle(
-                __("Dotclear's latest versions")
+                My::name()
             )
             ->setting(
                 'text',
@@ -53,20 +47,16 @@ class dcLatestVersionsWidget
             ->addOffline();
     }
 
-    public static function publicWidget($w)
+    public static function parseWidget(WidgetsElement $w): string
     {
-        if ($w->offline) {
-            return null;
-        }
-
-        if (!$w->checkHomeOnly(dcCore::app()->url->type) || $w->text == '') {
-            return null;
+        if ($w->offline || !$w->checkHomeOnly(dcCore::app()->url->type) || $w->text == '') {
+            return '';
         }
 
         # Builds to check
-        $builds = explode(',', (string) dcCore::app()->blog->settings->get(basename(__DIR__))->get('builds'));
+        $builds = explode(',', (string) dcCore::app()->blog->settings->get(My::id())->get('builds'));
         if (empty($builds[0])) {
-            return null;
+            return '';
         }
 
         $li = [];
@@ -103,15 +93,15 @@ class dcLatestVersionsWidget
         }
 
         if (empty($li)) {
-            return null;
+            return '';
         }
 
         # Display
         return $w->renderDiv(
-            $w->content_only,
+            (bool) $w->content_only,
             'dclatestversionswidget ' . $w->class,
             '',
-            ($w->title ? $w->renderTitle(html::escapeHTML($w->title)) : '') . sprintf('<ul>%s</ul>', implode('', $li))
+            ($w->title ? $w->renderTitle(Html::escapeHTML($w->title)) : '') . sprintf('<ul>%s</ul>', implode('', $li))
         );
     }
 }

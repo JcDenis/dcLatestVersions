@@ -10,43 +10,38 @@
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-if (!defined('DC_CONTEXT_ADMIN')) {
-    return null;
-}
+declare(strict_types=1);
 
-# -- Module specs --
-$mod_conf = [[
-    'builds',
-    "List of Dotclear's builds",
-    'stable,unstable,testing,sexy',
-    'string',
-]];
+namespace Dotclear\Plugin\dcLatestVersions;
 
-# -- Nothing to change below --
-try {
-    # Check module version
-    if (!dcCore::app()->newVersion(
-        basename(__DIR__),
-        dcCore::app()->plugins->moduleInfo(basename(__DIR__), 'version')
-    )) {
-        return null;
+use dcCore;
+use dcNsProcess;
+
+class Install extends dcNsProcess
+{
+    public static function init(): bool
+    {
+        static::$init = defined('DC_CONTEXT_ADMIN')
+            && dcCore::app()->newVersion(My::id(), dcCore::app()->plugins->moduleInfo(My::id(), 'version'));
+
+        return static::$init;
     }
-    # Set module settings
-    dcCore::app()->blog->settings->addNamespace(basename(__DIR__));
-    foreach ($mod_conf as $v) {
-        dcCore::app()->blog->settings->__get(basename(__DIR__))->put(
-            $v[0],
-            $v[2],
-            $v[3],
-            $v[1],
+
+    public static function process(): bool
+    {
+        if (!static::$init) {
+            return false;
+        }
+
+        dcCore::app()->blog->settings->get(My::id())->put(
+            'builds',
+            'stable,unstable,testing',
+            'string',
+            "List of Dotclear's builds",
             false,
             true
         );
+
+        return true;
     }
-
-    return true;
-} catch (Exception $e) {
-    dcCore::app()->error->add($e->getMessage());
-
-    return false;
 }
