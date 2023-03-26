@@ -3,7 +3,7 @@
 [![Release](https://img.shields.io/github/v/release/JcDenis/dcLatestVersions)](https://github.com/JcDenis/dcLatestVersions/releases)
 [![Date](https://img.shields.io/github/release-date/JcDenis/dcLatestVersions)](https://github.com/JcDenis/dcLatestVersions/releases)
 [![Issues](https://img.shields.io/github/issues/JcDenis/dcLatestVersions)](https://github.com/JcDenis/dcLatestVersions/issues)
-[![Dotclear](https://img.shields.io/badge/dotclear-v2.24-blue.svg)](https://fr.dotclear.org/download)
+[![Dotclear](https://img.shields.io/badge/dotclear-v2.26-blue.svg)](https://fr.dotclear.org/download)
 [![Dotaddict](https://img.shields.io/badge/dotaddict-official-green.svg)](https://plugins.dotaddict.org/dc2/details/dcLatestVersions)
 [![License](https://img.shields.io/github/license/JcDenis/dcLatestVersions)](https://github.com/JcDenis/dcLatestVersions/blob/master/LICENSE)
 
@@ -19,7 +19,7 @@ Simply show visitors last versions of nightly build of Dotclear.
  dcLatestVersions requires: 
 
   * permissions to manage widgets
-  * Dotclear 2.24
+  * Dotclear 2.26
 
 ## USAGE
 

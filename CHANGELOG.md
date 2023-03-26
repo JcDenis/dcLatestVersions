@@ -1,3 +1,7 @@
+2023.03.26
+- require dotclear 2.26
+- use namespace
+
 2022.12.20
 - change plugin name
 - use anonymous functions
