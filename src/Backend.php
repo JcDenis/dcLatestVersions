@@ -43,6 +43,11 @@ class Backend extends dcNsProcess
         dcCore::app()->addBehaviors([
             'initWidgets'           => [Widgets::class, 'initWidgets'],
             'adminDashboardItemsV2' => function (ArrayObject $__dashboard_items): void {
+                // nullsafe PHP < 8.0
+                if (is_null(dcCore::app()->auth) || is_null(dcCore::app()->auth->user_prefs) || is_null(dcCore::app()->blog)) {
+                    return;
+                }
+
                 if (!dcCore::app()->auth->user_prefs->get('dashboard')->get('dcLatestVersionsItems')) {
                     return;
                 }
@@ -92,6 +97,11 @@ class Backend extends dcNsProcess
             },
 
             'adminDashboardOptionsFormV2' => function (): void {
+                // nullsafe PHP < 8.0
+                if (is_null(dcCore::app()->auth) || is_null(dcCore::app()->auth->user_prefs)) {
+                    return;
+                }
+
                 if (!dcCore::app()->auth->user_prefs->get('dashboard')->prefExists('dcLatestVersionsItems')) {
                     dcCore::app()->auth->user_prefs->get('dashboard')->put(
                         'dcLatestVersionsItems',
@@ -111,6 +121,11 @@ class Backend extends dcNsProcess
             },
 
             'adminAfterDashboardOptionsUpdate' => function (?string $user_id): void {
+                // nullsafe PHP < 8.0
+                if (is_null(dcCore::app()->auth) || is_null(dcCore::app()->auth->user_prefs)) {
+                    return;
+                }
+
                 dcCore::app()->auth->user_prefs->get('dashboard')->put(
                     'dcLatestVersionsItems',
                     !empty($_POST['dcLatestVersionsItems']),

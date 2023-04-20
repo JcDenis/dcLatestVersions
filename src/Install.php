@@ -33,6 +33,11 @@ class Install extends dcNsProcess
             return false;
         }
 
+        // nullsafe PHP < 8.0
+        if (is_null(dcCore::app()->blog)) {
+            return false;
+        }
+
         dcCore::app()->blog->settings->get(My::id())->put(
             'builds',
             'stable,unstable,testing',

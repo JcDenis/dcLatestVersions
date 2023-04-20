@@ -53,6 +53,11 @@ class Widgets
             return '';
         }
 
+        // nullsafe PHP < 8.0
+        if (is_null(dcCore::app()->blog)) {
+            return '';
+        }
+
         # Builds to check
         $builds = explode(',', (string) dcCore::app()->blog->settings->get(My::id())->get('builds'));
         if (empty($builds[0])) {
