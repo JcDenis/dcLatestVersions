@@ -1,3 +1,10 @@
+2023.04.23
+- require dotclear 2.26
+- use latest dotclear namespace
+- add plugin Uninstaller features
+- remove magic
+- fix nullsafe warnings
+
 2023.03.26
 - require dotclear 2.26
 - use namespace
