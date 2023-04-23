@@ -40,6 +40,11 @@ class Uninstall extends dcNsProcess
                 My::id()
             )
             ->addUserAction(
+                'preferences',
+                'delete_related',
+                'dashboard:dcLatestVersionsItems'
+            )
+            ->addUserAction(
                 'plugins',
                 'delete',
                 My::id()
@@ -53,6 +58,11 @@ class Uninstall extends dcNsProcess
                 'settings',
                 'delete_all',
                 My::id()
+            )
+            ->addDirectAction(
+                'preferences',
+                'delete_related',
+                'dashboard:dcLatestVersionsItems'
             )
             ->addDirectAction(
                 'plugins',
