@@ -49,7 +49,7 @@ class Widgets
 
     public static function parseWidget(WidgetsElement $w): string
     {
-        if ($w->offline || !$w->checkHomeOnly(dcCore::app()->url->type) || $w->text == '') {
+        if ($w->__get('offline') || !$w->checkHomeOnly(dcCore::app()->url->type) || $w->__get('text') == '') {
             return '';
         }
 
@@ -93,7 +93,7 @@ class Widgets
                     $updater->getVersion(),
                     $updater->getFileURL(),
                 ],
-                $w->text
+                $w->__get('text')
             ));
         }
 
@@ -103,10 +103,10 @@ class Widgets
 
         # Display
         return $w->renderDiv(
-            (bool) $w->content_only,
-            'dclatestversionswidget ' . $w->class,
+            (bool) $w->__get('content_only'),
+            'dclatestversionswidget ' . $w->__get('class'),
             '',
-            ($w->title ? $w->renderTitle(Html::escapeHTML($w->title)) : '') . sprintf('<ul>%s</ul>', implode('', $li))
+            ($w->__get('title') ? $w->renderTitle(Html::escapeHTML($w->__get('title'))) : '') . sprintf('<ul>%s</ul>', implode('', $li))
         );
     }
 }

@@ -113,10 +113,15 @@ class Backend extends dcNsProcess
                 echo
                 '<div class="fieldset">' .
                 '<h4>' . Html::escapeHTML(My::name()) . '</h4>' .
-                (new Para())->items([
-                    (new Checkbox('dcLatestVersionsItems', (bool) dcCore::app()->auth->user_prefs->get('dashboard')->get('dcLatestVersionsItems')))->value(1),
-                    (new Label(__("Show Dotclear's latest versions on dashboards."), Label::OUTSIDE_LABEL_AFTER))->for('dcLatestVersionsItems')->class('classic'),
-                ])->render() .
+                (new Para())
+                    ->__call('items', [[
+                        (new Checkbox('dcLatestVersionsItems', (bool) dcCore::app()->auth->user_prefs->get('dashboard')->get('dcLatestVersionsItems')))
+                            ->__call('value', [1]),
+                        (new Label(__("Show Dotclear's latest versions on dashboards."), Label::OUTSIDE_LABEL_AFTER))
+                            ->__call('for', ['dcLatestVersionsItems'])
+                            ->__call('class', ['classic']),
+                    ]])
+                    ->render() .
                 '</div>';
             },
 
