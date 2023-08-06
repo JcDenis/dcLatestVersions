@@ -16,8 +16,8 @@ namespace Dotclear\Plugin\dcLatestVersions;
 
 use ArrayObject;
 use dcCore;
-use dcNsProcess;
 use dcUpdate;
+use Dotclear\Core\Process;
 use Dotclear\Helper\Html\Form\{
     Checkbox,
     Label,
@@ -25,18 +25,16 @@ use Dotclear\Helper\Html\Form\{
 };
 use Dotclear\Helper\Html\Html;
 
-class Backend extends dcNsProcess
+class Backend extends Process
 {
     public static function init(): bool
     {
-        static::$init = defined('DC_CONTEXT_ADMIN');
-
-        return static::$init;
+        return self::status(My::checkContext(My::BACKEND));
     }
 
     public static function process(): bool
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return false;
         }
 
@@ -44,15 +42,15 @@ class Backend extends dcNsProcess
             'initWidgets'           => [Widgets::class, 'initWidgets'],
             'adminDashboardItemsV2' => function (ArrayObject $__dashboard_items): void {
                 // nullsafe PHP < 8.0
-                if (is_null(dcCore::app()->auth) || is_null(dcCore::app()->auth->user_prefs) || is_null(dcCore::app()->blog)) {
+                if (is_null(dcCore::app()->blog)) {
                     return;
                 }
 
-                if (!dcCore::app()->auth->user_prefs->get('dashboard')->get('dcLatestVersionsItems')) {
+                if (!My::prefs()->get('dashboard_items')) {
                     return;
                 }
 
-                $builds = explode(',', (string) dcCore::app()->blog->settings->get(My::id())->get('builds'));
+                $builds = explode(',', (string) My::settings()->get('builds'));
                 if (empty($builds[0])) {
                     return;
                 }
@@ -97,14 +95,9 @@ class Backend extends dcNsProcess
             },
 
             'adminDashboardOptionsFormV2' => function (): void {
-                // nullsafe PHP < 8.0
-                if (is_null(dcCore::app()->auth) || is_null(dcCore::app()->auth->user_prefs)) {
-                    return;
-                }
-
-                if (!dcCore::app()->auth->user_prefs->get('dashboard')->prefExists('dcLatestVersionsItems')) {
-                    dcCore::app()->auth->user_prefs->get('dashboard')->put(
-                        'dcLatestVersionsItems',
+                if (!My::prefs()->prefExists('dashboard_items')) {
+                    My::prefs()->put(
+                        'dashboard_items',
                         false,
                         'boolean'
                     );
@@ -115,10 +108,10 @@ class Backend extends dcNsProcess
                 '<h4>' . Html::escapeHTML(My::name()) . '</h4>' .
                 (new Para())
                     ->__call('items', [[
-                        (new Checkbox('dcLatestVersionsItems', (bool) dcCore::app()->auth->user_prefs->get('dashboard')->get('dcLatestVersionsItems')))
+                        (new Checkbox(My::id() . 'dashboard_items', (bool) My::prefs()->get('dashboard_items')))
                             ->__call('value', [1]),
                         (new Label(__("Show Dotclear's latest versions on dashboards."), Label::OUTSIDE_LABEL_AFTER))
-                            ->__call('for', ['dcLatestVersionsItems'])
+                            ->__call('for', [My::id() . 'dashboard_items'])
                             ->__call('class', ['classic']),
                     ]])
                     ->render() .
@@ -126,14 +119,9 @@ class Backend extends dcNsProcess
             },
 
             'adminAfterDashboardOptionsUpdate' => function (?string $user_id): void {
-                // nullsafe PHP < 8.0
-                if (is_null(dcCore::app()->auth) || is_null(dcCore::app()->auth->user_prefs)) {
-                    return;
-                }
-
-                dcCore::app()->auth->user_prefs->get('dashboard')->put(
-                    'dcLatestVersionsItems',
-                    !empty($_POST['dcLatestVersionsItems']),
+                My::prefs()->put(
+                    'dashboard_items',
+                    !empty($_POST[My::id() . 'dashboard_items']),
                     'boolean'
                 );
             },

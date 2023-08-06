@@ -26,7 +26,7 @@ class Widgets
     {
         $w
             ->create(
-                'dclatestversionswidget',
+                My::id() . 'widget',
                 My::name(),
                 [self::class, 'parseWidget'],
                 null,
@@ -59,7 +59,7 @@ class Widgets
         }
 
         # Builds to check
-        $builds = explode(',', (string) dcCore::app()->blog->settings->get(My::id())->get('builds'));
+        $builds = explode(',', (string) My::settings()->get('builds'));
         if (empty($builds[0])) {
             return '';
         }
@@ -104,7 +104,7 @@ class Widgets
         # Display
         return $w->renderDiv(
             (bool) $w->__get('content_only'),
-            'dclatestversionswidget ' . $w->__get('class'),
+            My::id() . 'widget ' . $w->__get('class'),
             '',
             ($w->__get('title') ? $w->renderTitle(Html::escapeHTML($w->__get('title'))) : '') . sprintf('<ul>%s</ul>', implode('', $li))
         );
