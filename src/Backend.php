@@ -1,22 +1,12 @@
 <?php
-/**
- * @brief dcLatestVersions, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis, Pierre Van Glabeke
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\dcLatestVersions;
 
 use ArrayObject;
-use dcCore;
-use dcUpdate;
+use Dotclear\App;
+use Dotclear\Core\Backend\Update;
 use Dotclear\Core\Process;
 use Dotclear\Helper\Html\Form\{
     Checkbox,
@@ -25,6 +15,14 @@ use Dotclear\Helper\Html\Form\{
 };
 use Dotclear\Helper\Html\Html;
 
+/**
+ * @brief   dcLatestVersions backend class.
+ * @ingroup dcLatestVersions
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
+ */
 class Backend extends Process
 {
     public static function init(): bool
@@ -38,11 +36,10 @@ class Backend extends Process
             return false;
         }
 
-        dcCore::app()->addBehaviors([
+        App::behavior()->addBehaviors([
             'initWidgets'           => [Widgets::class, 'initWidgets'],
             'adminDashboardItemsV2' => function (ArrayObject $__dashboard_items): void {
-                // nullsafe PHP < 8.0
-                if (is_null(dcCore::app()->blog)) {
+                if (!App::blog()->isDefined()) {
                     return;
                 }
 
@@ -63,11 +60,11 @@ class Backend extends Process
                         continue;
                     }
 
-                    $updater = new dcUpdate(
-                        DC_UPDATE_URL,
+                    $updater = new Update(
+                        App::config()->coreUpdateUrl(),
                         'dotclear',
                         $build,
-                        DC_TPL_CACHE . '/versions'
+                        App::config()->cacheRoot() . '/versions'
                     );
 
                     if (false === $updater->check('0')) {

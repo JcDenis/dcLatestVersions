@@ -1,25 +1,23 @@
 <?php
-/**
- * @brief dcLatestVersions, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis, Pierre Van Glabeke
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\dcLatestVersions;
 
-use dcCore;
-use dcUpdate;
+use Dotclear\App;
+use Dotclear\Core\Backend\Update;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Plugin\widgets\WidgetsStack;
 use Dotclear\Plugin\widgets\WidgetsElement;
 
+/**
+ * @brief   dcLatestVersions widgets class.
+ * @ingroup dcLatestVersions
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
+ */
 class Widgets
 {
     public static function initWidgets(WidgetsStack $w): void
@@ -49,12 +47,12 @@ class Widgets
 
     public static function parseWidget(WidgetsElement $w): string
     {
-        if ($w->__get('offline') || !$w->checkHomeOnly(dcCore::app()->url->type) || $w->__get('text') == '') {
+        if ($w->__get('offline') || !$w->checkHomeOnly(App::url()->type) || $w->__get('text') == '') {
             return '';
         }
 
         // nullsafe PHP < 8.0
-        if (is_null(dcCore::app()->blog)) {
+        if (!App::blog()->isDefined()) {
             return '';
         }
 
@@ -71,11 +69,11 @@ class Widgets
                 continue;
             }
 
-            $updater = new dcUpdate(
-                DC_UPDATE_URL,
+            $updater = new Update(
+                App::config()->coreUpdateUrl(),
                 'dotclear',
                 $build,
-                DC_TPL_CACHE . '/versions'
+                App::config()->cacheRoot() . '/versions'
             );
 
             if (false === $updater->check('0')) {
