@@ -8,8 +8,8 @@ use Dotclear\App;
 use Dotclear\Core\Process;
 
 /**
- * @brief   dcLatestVersions frontend class.
- * @ingroup dcLatestVersions
+ * @brief       dcLatestVersions frontend class.
+ * @ingroup     dcLatestVersions
  *
  * @author      Jean-Christian Denis
  * @copyright   Jean-Christian Denis
@@ -28,9 +28,7 @@ class Frontend extends Process
             return false;
         }
 
-        App::behavior()->addBehaviors([
-            'initWidgets' => [Widgets::class, 'initWidgets'],
-        ]);
+        App::behavior()->addBehavior('initWidgets', Widgets::initWidgets(...));
 
         return true;
     }

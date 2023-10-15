@@ -16,8 +16,8 @@ use Dotclear\Helper\Html\Form\{
 use Dotclear\Helper\Html\Html;
 
 /**
- * @brief   dcLatestVersions backend class.
- * @ingroup dcLatestVersions
+ * @brief       dcLatestVersions backend class.
+ * @ingroup     dcLatestVersions
  *
  * @author      Jean-Christian Denis
  * @copyright   Jean-Christian Denis
@@ -37,13 +37,11 @@ class Backend extends Process
         }
 
         App::behavior()->addBehaviors([
-            'initWidgets'           => [Widgets::class, 'initWidgets'],
+            'initWidgets'           => Widgets::initWidgets(...),
             'adminDashboardItemsV2' => function (ArrayObject $__dashboard_items): void {
-                if (!App::blog()->isDefined()) {
-                    return;
-                }
-
-                if (!My::prefs()->get('dashboard_items')) {
+                if (!App::blog()->isDefined()
+                    || !My::prefs()->get('dashboard_items')
+                ) {
                     return;
                 }
 

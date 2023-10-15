@@ -11,8 +11,8 @@ use Dotclear\Plugin\widgets\WidgetsStack;
 use Dotclear\Plugin\widgets\WidgetsElement;
 
 /**
- * @brief   dcLatestVersions widgets class.
- * @ingroup dcLatestVersions
+ * @brief       dcLatestVersions widgets class.
+ * @ingroup     dcLatestVersions
  *
  * @author      Jean-Christian Denis
  * @copyright   Jean-Christian Denis
@@ -26,7 +26,7 @@ class Widgets
             ->create(
                 My::id() . 'widget',
                 My::name(),
-                [self::class, 'parseWidget'],
+                self::parseWidget(...),
                 null,
                 __('Show the latest available versions of Dotclear')
             )
@@ -47,12 +47,11 @@ class Widgets
 
     public static function parseWidget(WidgetsElement $w): string
     {
-        if ($w->__get('offline') || !$w->checkHomeOnly(App::url()->type) || $w->__get('text') == '') {
-            return '';
-        }
-
-        // nullsafe PHP < 8.0
-        if (!App::blog()->isDefined()) {
+        if ($w->__get('offline')
+            || !$w->checkHomeOnly(App::url()->type)
+            || $w->__get('text') == ''
+            || !App::blog()->isDefined()
+        ) {
             return '';
         }
 

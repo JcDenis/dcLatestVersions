@@ -1,3 +1,9 @@
+dcLatestVersions 2023.10.15
+===========================================================
+* Require Dotclear 2.28
+* Require PHP 8.1
+* Cosmetic clean
+
 dcLatestVersions 2023.10.11
 ===========================================================
 * Require Dotclear 2.28

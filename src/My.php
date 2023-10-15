@@ -7,8 +7,8 @@ namespace Dotclear\Plugin\dcLatestVersions;
 use Dotclear\Module\MyPlugin;
 
 /**
- * @brief   dcLatestVersions My helper.
- * @ingroup dcLatestVersions
+ * @brief       dcLatestVersions My helper.
+ * @ingroup     dcLatestVersions
  *
  * @author      Jean-Christian Denis
  * @copyright   Jean-Christian Denis

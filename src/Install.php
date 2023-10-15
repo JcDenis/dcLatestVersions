@@ -7,8 +7,8 @@ namespace Dotclear\Plugin\dcLatestVersions;
 use Dotclear\Core\Process;
 
 /**
- * @brief   dcLatestVersions installation class.
- * @ingroup dcLatestVersions
+ * @brief       dcLatestVersions installation class.
+ * @ingroup     dcLatestVersions
  *
  * @author      Jean-Christian Denis
  * @copyright   Jean-Christian Denis

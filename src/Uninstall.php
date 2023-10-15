@@ -8,8 +8,8 @@ use Dotclear\Core\Process;
 use Dotclear\Plugin\Uninstaller\Uninstaller;
 
 /**
- * @brief   dcLatestVersions uninstall class.
- * @ingroup dcLatestVersions
+ * @brief       dcLatestVersions uninstall class.
+ * @ingroup     dcLatestVersions
  *
  * @author      Jean-Christian Denis
  * @copyright   Jean-Christian Denis
