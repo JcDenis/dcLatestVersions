@@ -7,7 +7,7 @@
     <desc>Show the latest available versions of Dotclear</desc>
     <file>https://github.com/JcDenis/dcLatestVersions/releases/download/v2023.10.15/plugin-dcLatestVersions.zip</file>
     <da:dcmin>2.28</da:dcmin>
-    <da:details>https://git.dotclear.watch/JcDenis/dcLatestVersions/src/branch/master/README.md</da:details>
-    <da:support>https://git.dotclear.watch/JcDenis/dcLatestVersions/issues</da:support>
+    <da:details>https://github.com/JcDenis/dcLatestVersions/src/branch/master/README.md</da:details>
+    <da:support>https://github.com/JcDenis/dcLatestVersions/issues</da:support>
   </module>
 </modules>
