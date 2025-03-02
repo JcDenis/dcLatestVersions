@@ -4,7 +4,7 @@
 ![Date](https://img.shields.io/github/release-date/jcdenis/dcLatestVersions?color=red)
 [![Dotclear](https://img.shields.io/badge/dotclear-v2.33-137bbb.svg)](https://fr.dotclear.org/download)
 [![Dotaddict](https://img.shields.io/badge/dotaddict-official-9ac123.svg)](https://plugins.dotaddict.org/dc2/details/dcLatestVersions)
-[![License](https://img.shields.io/github/license/jcdenis/dcLatestVersions?color=white)](https://github.com/JcDenis/dcLatestVersions/src/branch/master/LICENSE)
+[![License](https://img.shields.io/github/license/jcdenis/dcLatestVersions?color=white)](https://github.com/JcDenis/dcLatestVersions/blob/master/LICENSE)
 
 ## ABOUT
 
@@ -28,7 +28,7 @@ You can add a dashboard item by enable it from your dashboard preferences.
 
 ## MORE
 
-* [License](https://github.com/JcDenis/dcLatestVersion/src/branch/master/LICENSE)
+* [License](https://github.com/JcDenis/dcLatestVersion/blob/master/LICENSE)
 * [Packages & details](https://github.com/JcDenis/dcLatestVersion/releases) (or on [Dotaddict](https://plugins.dotaddict.org/dc2/details/dcLatestVersion))
 * [Sources & contributions](https://github.com/JcDenis/dcLatestVersion)
 * [Issues & security](https://github.com/JcDenis/dcLatestVersion/issues)
