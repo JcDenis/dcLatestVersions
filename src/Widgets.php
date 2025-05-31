@@ -48,7 +48,7 @@ class Widgets
     public static function parseWidget(WidgetsElement $w): string
     {
         if ($w->__get('offline')
-            || !$w->checkHomeOnly(App::url()->type)
+            || !$w->checkHomeOnly(App::url()->getType())
             || $w->__get('text') == ''
             || !App::blog()->isDefined()
         ) {
