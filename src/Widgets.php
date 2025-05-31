@@ -6,9 +6,9 @@ namespace Dotclear\Plugin\dcLatestVersions;
 
 use Dotclear\App;
 use Dotclear\Core\Backend\Update;
+use Dotclear\Helper\Html\Form\{ Li, Ul };
 use Dotclear\Helper\Html\Html;
-use Dotclear\Plugin\widgets\WidgetsStack;
-use Dotclear\Plugin\widgets\WidgetsElement;
+use Dotclear\Plugin\widgets\{ WidgetsStack, WidgetsElement };
 
 /**
  * @brief       dcLatestVersions widgets class.
@@ -79,7 +79,7 @@ class Widgets
                 continue;
             }
 
-            $li[] = sprintf('<li>%s</li>', str_replace(
+            $li[] = (new Li())->text((string) str_replace(
                 [
                     '%r',
                     '%v',
@@ -94,7 +94,7 @@ class Widgets
             ));
         }
 
-        if (empty($li)) {
+        if ($li === []) {
             return '';
         }
 
@@ -103,7 +103,7 @@ class Widgets
             (bool) $w->__get('content_only'),
             My::id() . 'widget ' . $w->__get('class'),
             '',
-            ($w->__get('title') ? $w->renderTitle(Html::escapeHTML($w->__get('title'))) : '') . sprintf('<ul>%s</ul>', implode('', $li))
+            ($w->__get('title') ? $w->renderTitle(Html::escapeHTML($w->__get('title'))) : '') . (new Ul())->items($li)->render()
         );
     }
 }

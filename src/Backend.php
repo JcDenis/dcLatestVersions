@@ -8,11 +8,7 @@ use ArrayObject;
 use Dotclear\App;
 use Dotclear\Core\Backend\Update;
 use Dotclear\Core\Process;
-use Dotclear\Helper\Html\Form\{
-    Checkbox,
-    Label,
-    Para
-};
+use Dotclear\Helper\Html\Form\{ Checkbox, Div, Label, Li, Link, Para, Text, Ul };
 use Dotclear\Helper\Html\Html;
 
 /**
@@ -46,15 +42,11 @@ class Backend extends Process
                 }
 
                 $builds = explode(',', (string) My::settings()->get('builds'));
-                if (empty($builds[0])) {
-                    return;
-                }
-
-                $li = [];
+                $li     = [];
 
                 foreach ($builds as $build) {
                     $build = strtolower(trim($build));
-                    if (empty($build)) {
+                    if ($build === '') {
                         continue;
                     }
 
@@ -65,28 +57,34 @@ class Backend extends Process
                         App::config()->cacheRoot() . '/versions'
                     );
 
-                    if (false === $updater->check('0')) {
+                    if ($updater->check('0') === false) {
                         continue;
                     }
 
-                    $li[] = sprintf(
-                        '<li><a href="%1$s" title="%2$s">%3$s</a> : %4$s</li>',
-                        $updater->getFileURL(),
-                        sprintf(__('Download Dotclear %s'), $updater->getVersion()),
-                        $build,
-                        $updater->getVersion()
-                    );
+                    $li[] = (new Li())
+                        ->separator(' : ')
+                        ->items([
+                            (new Link())
+                                ->href((string) $updater->getFileURL())
+                                ->title(sprintf(__('Download Dotclear %s'), (string) $updater->getVersion()))
+                                ->text($build),
+                            (new Text('', $updater->getVersion())),
+                        ]);
                 }
 
-                if (empty($li)) {
+                if ($li === []) {
                     return;
                 }
 
                 # Display
-                $__dashboard_items[0][] = '<div class="box small" id="udclatestversionsitems">' .
-                '<h3>' . Html::escapeHTML(My::name()) . '</h3>' .
-                '<ul>' . implode('', $li) . '</ul>' .
-                '</div>';
+                $__dashboard_items[0][] = (new Div('udclatestversionsitems'))
+                    ->class(['box', 'small'])
+                    ->items([
+                        (new Text('h3', Html::escapeHTML(My::name()))),
+                        (new Ul())
+                            ->items($li),
+                    ])
+                    ->render();
             },
 
             'adminDashboardOptionsFormV2' => function (): void {
@@ -98,19 +96,18 @@ class Backend extends Process
                     );
                 }
 
-                echo
-                '<div class="fieldset">' .
-                '<h4>' . Html::escapeHTML(My::name()) . '</h4>' .
-                (new Para())
-                    ->__call('items', [[
-                        (new Checkbox(My::id() . 'dashboard_items', (bool) My::prefs()->get('dashboard_items')))
-                            ->__call('value', [1]),
-                        (new Label(__("Show Dotclear's latest versions on dashboards."), Label::OUTSIDE_LABEL_AFTER))
-                            ->__call('for', [My::id() . 'dashboard_items'])
-                            ->__call('class', ['classic']),
-                    ]])
-                    ->render() .
-                '</div>';
+                echo (new Div())
+                    ->class('fieldset')
+                    ->items([
+                        (new Text('h4', Html::escapeHTML(My::name()))),
+                        (new Para())
+                            ->items([
+                                (new Checkbox(My::id() . 'dashboard_items', (bool) My::prefs()->get('dashboard_items')))
+                                    ->value(1)
+                                    ->label(new Label(__("Show Dotclear's latest versions on dashboards."), Label::IL_FT)),
+                            ]),
+                    ])
+                    ->render();
             },
 
             'adminAfterDashboardOptionsUpdate' => function (?string $user_id): void {
