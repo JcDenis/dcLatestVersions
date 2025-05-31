@@ -14,7 +14,7 @@ _dcLatestVersions_ is a plugin for the open-source web publishing software calle
 
 ## REQUIREMENTS
 
-* Dotclear 2.28
+* Dotclear 2.34
 * PHP 8.1
 * Dotclear permissions to manage widgets
 

@@ -1,3 +1,9 @@
+dcLatestVersions 2025.05.31
+===========================================================
+* Bump Dotclear from 2.28 to 2.34
+* Fix widget options
+* Use Helper/Form
+
 dcLatestVersions 2025.03.02
 ===========================================================
 * Require Dotclear 2.28
