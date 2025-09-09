@@ -1,3 +1,8 @@
+dcLatestVersions 2025.09.09
+===========================================================
+* Bump Dotclear from 2.34 to 2.36
+* Use TraitProcess
+
 dcLatestVersions 2025.05.31
 ===========================================================
 * Bump Dotclear from 2.28 to 2.34
