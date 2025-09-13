@@ -8,7 +8,14 @@ use ArrayObject;
 use Dotclear\App;
 use Dotclear\Core\Backend\Update;
 use Dotclear\Helper\Process\TraitProcess;
-use Dotclear\Helper\Html\Form\{ Checkbox, Div, Label, Li, Link, Para, Text, Ul };
+use Dotclear\Helper\Html\Form\Checkbox;
+use Dotclear\Helper\Html\Form\Div;
+use Dotclear\Helper\Html\Form\Label;
+use Dotclear\Helper\Html\Form\Li;
+use Dotclear\Helper\Html\Form\Link;
+use Dotclear\Helper\Html\Form\Para;
+use Dotclear\Helper\Html\Form\Text;
+use Dotclear\Helper\Html\Form\Ul;
 use Dotclear\Helper\Html\Html;
 
 /**

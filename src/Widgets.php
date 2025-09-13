@@ -6,9 +6,11 @@ namespace Dotclear\Plugin\dcLatestVersions;
 
 use Dotclear\App;
 use Dotclear\Core\Backend\Update;
-use Dotclear\Helper\Html\Form\{ Li, Ul };
+use Dotclear\Helper\Html\Form\Li;
+use Dotclear\Helper\Html\Form\Ul;
 use Dotclear\Helper\Html\Html;
-use Dotclear\Plugin\widgets\{ WidgetsStack, WidgetsElement };
+use Dotclear\Plugin\widgets\WidgetsStack;
+use Dotclear\Plugin\widgets\WidgetsElement;
 
 /**
  * @brief       dcLatestVersions widgets class.
@@ -79,7 +81,7 @@ class Widgets
                 continue;
             }
 
-            $li[] = (new Li())->text((string) str_replace(
+            $replace = str_replace(
                 [
                     '%r',
                     '%v',
@@ -87,11 +89,17 @@ class Widgets
                 ],
                 [
                     $build,
-                    $updater->getVersion(),
-                    $updater->getFileURL(),
+                    (string) $updater->getVersion(),
+                    (string) $updater->getFileURL(),
                 ],
-                $w->__get('text')
-            ));
+                $w->get('text')
+            );
+
+            if (!is_string($replace)) {
+                continue;
+            }
+
+            $li[] = (new Li())->text($replace);
         }
 
         if ($li === []) {
@@ -100,10 +108,10 @@ class Widgets
 
         # Display
         return $w->renderDiv(
-            (bool) $w->__get('content_only'),
-            My::id() . 'widget ' . $w->__get('class'),
+            (bool) $w->content_only,
+            My::id() . 'widget ' . $w->class,
             '',
-            ($w->__get('title') ? $w->renderTitle(Html::escapeHTML($w->__get('title'))) : '') . (new Ul())->items($li)->render()
+            ($w->title ? $w->renderTitle(Html::escapeHTML($w->title)) : '') . (new Ul())->items($li)->render()
         );
     }
 }
