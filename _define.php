@@ -16,7 +16,7 @@ $this->registerModule(
     "Dotclear's latest versions",
     'Show the latest available versions of Dotclear',
     'Jean-Christian Denis, Pierre Van Glabeke',
-    '2025.09.09',
+    '2025.09.13',
     [
         'requires'    => [['core', '2.36']],
         'permissions' => 'My',
