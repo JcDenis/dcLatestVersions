@@ -6,7 +6,7 @@ namespace Dotclear\Plugin\dcLatestVersions;
 
 use ArrayObject;
 use Dotclear\App;
-use Dotclear\Core\Backend\Update;
+use Dotclear\Core\Upgrade\Update;
 use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\Helper\Html\Form\Checkbox;
 use Dotclear\Helper\Html\Form\Div;
@@ -50,7 +50,7 @@ class Backend
                     return;
                 }
 
-                $builds = explode(',', (string) My::settings()->get('builds'));
+                $builds = explode(',', (string) My::settings()->getStr('builds', false));
                 $li     = [];
 
                 foreach ($builds as $build) {
@@ -86,6 +86,9 @@ class Backend
                 }
 
                 # Display
+                if (!isset($__dashboard_items[0]) || !is_array($__dashboard_items[0])) {
+                    $__dashboard_items[0] = [];
+                }
                 $__dashboard_items[0][] = (new Div('udclatestversionsitems'))
                     ->class(['box', 'small'])
                     ->items([

@@ -58,7 +58,7 @@ class Widgets
         }
 
         # Builds to check
-        $builds = explode(',', (string) My::settings()->get('builds'));
+        $builds = explode(',', My::settings()->getStr('builds', false));
         if (empty($builds[0])) {
             return '';
         }
@@ -92,12 +92,8 @@ class Widgets
                     (string) $updater->getVersion(),
                     (string) $updater->getFileURL(),
                 ],
-                $w->get('text')
+                is_string($w->get('text')) ? $w->get('text') : ''
             );
-
-            if (!is_string($replace)) {
-                continue;
-            }
 
             $li[] = (new Li())->text($replace);
         }

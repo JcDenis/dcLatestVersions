@@ -12,13 +12,19 @@
  * @copyright   Jean-Christian Denis
  * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
+declare(strict_types=1);
+
+if (!isset($this) || !is_object($this) || !method_exists($this, 'registerModule') || !isset($this->id) || !is_string($this->id)) {
+    return;
+}
+
 $this->registerModule(
     "Dotclear's latest versions",
     'Show the latest available versions of Dotclear',
     'Jean-Christian Denis, Pierre Van Glabeke',
     '2025.09.13',
     [
-        'requires'    => [['core', '2.36']],
+        'requires'    => [['core', '2.39']],
         'permissions' => 'My',
         'type'        => 'plugin',
         'support'     => 'https://github.com/JcDenis/' . $this->id . '/issues',

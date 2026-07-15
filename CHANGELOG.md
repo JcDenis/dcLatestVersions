@@ -1,3 +1,8 @@
+dcLatestVersions xxxx.xx.xx
+===========================================================
+* Bump Dotclear from 2.36 to 2.39
+* Code review (phpstan max)
+
 dcLatestVersions 2025.09.09
 ===========================================================
 * Bump Dotclear from 2.34 to 2.36
