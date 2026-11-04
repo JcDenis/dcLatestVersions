@@ -1,3 +1,7 @@
+dcLatestVersions 2026.11.05
+===========================================================
+* Fix deprecated Update class
+
 dcLatestVersions 2026.08.12
 ===========================================================
 * Bump Dotclear from 2.36 to 2.39
