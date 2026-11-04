@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\dcLatestVersions;
 
 use Dotclear\App;
-use Dotclear\Core\Backend\Update;
+use Dotclear\Core\Upgrade\Update;
 use Dotclear\Helper\Html\Form\Li;
 use Dotclear\Helper\Html\Form\Ul;
 use Dotclear\Helper\Html\Html;
