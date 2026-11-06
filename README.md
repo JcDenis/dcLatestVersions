@@ -37,5 +37,6 @@ You can add a dashboard item by enable it from your dashboard preferences.
 
 * Jean-Chirstian Denis (author)
 * Pierre Van Glabeke
+* Claude (AI assistant by Anthropic)
 
 You are welcome to contribute to this code.
