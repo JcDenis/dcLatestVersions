@@ -1,3 +1,8 @@
+dcLatestVersions 2026.11.09
+===========================================================
+* Add Claude to contributors
+* Fix compatibility with Dotclear 2.40
+
 dcLatestVersions 2026.11.05
 ===========================================================
 * Fix deprecated Update class
