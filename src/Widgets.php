@@ -103,11 +103,13 @@ class Widgets
         }
 
         # Display
+        $title = is_string($w->get('title')) ? $w->get('title') : '';
+
         return $w->renderDiv(
-            (bool) $w->content_only,
-            My::id() . 'widget ' . $w->class,
+            (bool) $w->get('content_only'),
+            My::id() . 'widget ' . (is_string($w->get('class')) ? $w->get('class') : ''),
             '',
-            ($w->title ? $w->renderTitle(Html::escapeHTML($w->title)) : '') . (new Ul())->items($li)->render()
+            ($title !== '' ? $w->renderTitle(Html::escapeHTML($title)) : '') . (new Ul())->items($li)->render()
         );
     }
 }
