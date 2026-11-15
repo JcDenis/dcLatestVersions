@@ -12,6 +12,8 @@ _dcLatestVersions_ is a plugin for the open-source web publishing software calle
 
 > Simply show visitors last versions of nightly build of Dotclear.
 
+A [user guide in French](https://github.com/JcDenis/dcLatestVersions/blob/master/docs/fr/utilisation.md) is available.
+
 ## REQUIREMENTS
 
 * Dotclear 2.39
@@ -28,6 +30,7 @@ You can add a dashboard item by enable it from your dashboard preferences.
 
 ## MORE
 
+* [User guide (in French)](https://github.com/JcDenis/dcLatestVersions/blob/master/docs/fr/utilisation.md)
 * [License](https://github.com/JcDenis/dcLatestVersions/blob/master/LICENSE)
 * [Packages & details](https://github.com/JcDenis/dcLatestVersions/releases) (or on [Repository](https://dotclear.org/plugin/detail/dcLatestVersions))
 * [Sources & contributions](https://github.com/JcDenis/dcLatestVersions)
