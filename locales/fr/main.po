@@ -28,3 +28,5 @@ msgstr "Texte (%r = type, %v = version, %u = url) :"
 msgid "<strong>%r: </strong> <a href=\"%u\" title=\"Download Dotclear %v\">%v</a>"
 msgstr "<strong>%r : </strong> <a href=\"%u\" title=\"Télécharger Dotclear %v\">%v</a>"
 
+msgid "Builds to check (comma separated list):"
+msgstr "Versions à vérifier (liste séparée par des virgules) :"

@@ -6,7 +6,6 @@ namespace Dotclear\Plugin\dcLatestVersions;
 
 use ArrayObject;
 use Dotclear\App;
-use Dotclear\Core\Upgrade\Update;
 use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\Helper\Html\Form\Checkbox;
 use Dotclear\Helper\Html\Form\Div;
@@ -50,23 +49,9 @@ class Backend
                     return;
                 }
 
-                $builds = explode(',', (string) My::settings()->getStr('builds', false));
-                $li     = [];
-
-                foreach ($builds as $build) {
-                    $build = strtolower(trim($build));
-                    if ($build === '') {
-                        continue;
-                    }
-
-                    $updater = new Update(
-                        App::config()->coreUpdateUrl(),
-                        'dotclear',
-                        $build,
-                        App::config()->cacheRoot() . '/versions'
-                    );
-
-                    if ($updater->check('0') === false) {
+                $li = [];
+                foreach (Versions::builds(My::settings()->getStr('builds', false)) as $build) {
+                    if (null === ($latest = Versions::get($build))) {
                         continue;
                     }
 
@@ -74,10 +59,10 @@ class Backend
                         ->separator(' : ')
                         ->items([
                             (new Link())
-                                ->href((string) $updater->getFileURL())
-                                ->title(sprintf(__('Download Dotclear %s'), (string) $updater->getVersion()))
+                                ->href($latest['url'])
+                                ->title(sprintf(__('Download Dotclear %s'), $latest['version']))
                                 ->text($build),
-                            (new Text('', $updater->getVersion())),
+                            (new Text('', Html::escapeHTML($latest['version']))),
                         ]);
                 }
 

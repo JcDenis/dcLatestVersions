@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\dcLatestVersions;
 
 use Dotclear\App;
-use Dotclear\Core\Upgrade\Update;
 use Dotclear\Helper\Html\Form\Li;
 use Dotclear\Helper\Html\Form\Ul;
 use Dotclear\Helper\Html\Html;
@@ -36,6 +35,12 @@ class Widgets
                 My::name()
             )
             ->setting(
+                'builds',
+                __('Builds to check (comma separated list):'),
+                My::settings()->getStr('builds', false),
+                'text'
+            )
+            ->setting(
                 'text',
                 __('Text (%r = release, %v = version, %u = url):'),
                 __('<strong>%r: </strong> <a href="%u" title="Download Dotclear %v">%v</a>'),
@@ -57,27 +62,12 @@ class Widgets
             return '';
         }
 
-        # Builds to check
-        $builds = explode(',', My::settings()->getStr('builds', false));
-        if (empty($builds[0])) {
-            return '';
-        }
+        # Builds to check, from widget or from global setting
+        $builds = Versions::builds(is_string($w->get('builds')) && $w->get('builds') !== '' ? $w->get('builds') : My::settings()->getStr('builds', false));
 
         $li = [];
         foreach ($builds as $build) {
-            $build = strtolower(trim($build));
-            if (empty($build)) {
-                continue;
-            }
-
-            $updater = new Update(
-                App::config()->coreUpdateUrl(),
-                'dotclear',
-                $build,
-                App::config()->cacheRoot() . '/versions'
-            );
-
-            if (false === $updater->check('0')) {
+            if (null === ($latest = Versions::get($build))) {
                 continue;
             }
 
@@ -88,9 +78,9 @@ class Widgets
                     '%u',
                 ],
                 [
-                    $build,
-                    (string) $updater->getVersion(),
-                    (string) $updater->getFileURL(),
+                    Html::escapeHTML($build),
+                    Html::escapeHTML($latest['version']),
+                    Html::escapeURL($latest['url']),
                 ],
                 is_string($w->get('text')) ? $w->get('text') : ''
             );
