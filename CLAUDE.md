@@ -22,6 +22,7 @@ Required Dotclear and PHP versions: see `_define.php`.
 * `src/Install.php`: install and update, default settings.
 * `src/My.php`: module helpers (`My::id()`, settings, permissions).
 * `src/Uninstall.php`: cleaners for the plugin Uninstaller.
+* `src/Versions.php`: latest versions helper, with a retry delay when the server is unreachable.
 * `src/Widgets.php`: widgets definition and rendering.
 * Behaviors used: `initWidgets`, `adminDashboardItemsV2`, `adminDashboardOptionsFormV2`, `adminAfterDashboardOptionsUpdate`.
 

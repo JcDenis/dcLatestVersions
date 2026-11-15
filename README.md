@@ -28,10 +28,10 @@ You can add a dashboard item by enable it from your dashboard preferences.
 
 ## MORE
 
-* [License](https://github.com/JcDenis/dcLatestVersion/blob/master/LICENSE)
-* [Packages & details](https://github.com/JcDenis/dcLatestVersion/releases) (or on [Repository](https://dotclear.org/plugin/detail/dcLatestVersion))
-* [Sources & contributions](https://github.com/JcDenis/dcLatestVersion)
-* [Issues & security](https://github.com/JcDenis/dcLatestVersion/issues)
+* [License](https://github.com/JcDenis/dcLatestVersions/blob/master/LICENSE)
+* [Packages & details](https://github.com/JcDenis/dcLatestVersions/releases) (or on [Repository](https://dotclear.org/plugin/detail/dcLatestVersions))
+* [Sources & contributions](https://github.com/JcDenis/dcLatestVersions)
+* [Issues & security](https://github.com/JcDenis/dcLatestVersions/issues)
 
 ## CONTRIBUTORS
 
