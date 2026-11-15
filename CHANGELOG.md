@@ -1,3 +1,8 @@
+dcLatestVersions 2026.11.15
+===========================================================
+* [fix] Widget builds setting, escaped version and URL, retry delay when server is unreachable
+* [docs] Add a user guide in French, with screenshots
+
 dcLatestVersions 2026.11.09
 ===========================================================
 * Add Claude to contributors
