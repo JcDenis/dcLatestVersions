@@ -37,6 +37,7 @@ Chaque ligne montre le type de version, puis le numéro qui sert de lien vers le
 ![Réglages du widget](img/widget-reglages.png)
 
 * _Titre (optionnel)_ : le titre du widget.
+* _Versions à vérifier (liste séparée par des virgules)_ : les types de version à afficher dans ce widget. Le champ reprend la liste générale (voir plus bas) quand vous ajoutez le widget. Si vous le videz, le widget suit la liste générale.
 * _Texte_ : le modèle d'une ligne. Trois codes sont remplacés : `%r` par le type de version (stable, unstable, testing), `%v` par le numéro et `%u` par l'adresse de téléchargement. Le HTML est accepté.
 * _Afficher_ : sur toutes les pages ou seulement en page d'accueil.
 * _Contenu seul (sans boîte englobante)_ : supprime la boîte autour du widget.
@@ -63,7 +64,7 @@ Cette option est personnelle : chaque utilisateur choisit pour lui-même.
 
 ## Choisir les versions à suivre
 
-Par défaut, le plugin suit trois types : `stable,unstable,testing`.
+Par défaut, le plugin suit trois types : `stable,unstable,testing`. Cette liste générale sert à la boîte du tableau de bord, et aux widgets dont le champ _Versions à vérifier_ est vide.
 
 Pour changer cette liste, utilisez la page _about:config_ (plugin _aboutConfig_, fourni avec Dotclear) :
 
@@ -79,6 +80,6 @@ Les majuscules et les espaces autour des noms sont ignorés. Un type inconnu du 
 ## Bon à savoir
 
 * Le site de Dotclear est interrogé au plus toutes les six heures. Entre deux, le plugin utilise une copie gardée en cache.
-* Si le site de Dotclear n'est pas joignable et qu'aucune copie n'existe, rien ne s'affiche : ni le widget, ni la boîte du tableau de bord. Aucun message n'explique pourquoi.
-* Si la liste `builds` est vide, rien ne s'affiche non plus.
+* Si le site de Dotclear n'est pas joignable et qu'aucune copie n'existe, rien ne s'affiche : ni le widget, ni la boîte du tableau de bord. Aucun message n'explique pourquoi. Le plugin attend alors une heure avant d'interroger à nouveau le site, pour ne pas ralentir vos pages.
+* Si la liste `builds` est vide (et le champ du widget aussi), rien ne s'affiche non plus.
 * Le widget et la boîte montrent seulement le numéro de version et le lien. Ils ne comparent pas avec la version installée sur votre blog.
